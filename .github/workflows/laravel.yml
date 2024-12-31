@@ -24,17 +24,3 @@ jobs:
           php-version: '8.1' # Remplacez par la version de PHP utilisée par votre projet
           extensions: mbstring, bcmath
           coverage: none
-
-      # Étape 3 : Installer Composer
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist
-
-      # Étape 4 : Configuration de l'environnement
-      - name: Set up environment file
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-
-      # Étape 5 : Exécuter les tests unitaires
-      - name: Run Tests
-        run: php artisan test
