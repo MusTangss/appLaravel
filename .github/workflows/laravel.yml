@@ -24,11 +24,8 @@ jobs:
         curl -sS https://getcomposer.org/installer | php
         sudo mv composer.phar /usr/local/bin/composer
 
-    - name: Install Laravel Installer
-      run: composer global require laravel/installer
-
-    - name: Create Laravel Application
-      run: laravel new example-app --force # Crée une nouvelle app Laravel dans le dossier example-app
+    - name: Install Laravel Project with Composer
+      run: composer create-project --prefer-dist laravel/laravel example-app
 
     - name: Navigate to Laravel Project
       run: cd example-app
