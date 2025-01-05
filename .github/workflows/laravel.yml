@@ -24,11 +24,12 @@ jobs:
           --health-retries=3
 
     steps:
-    # Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Set up PHP
+    - name: Navigate to project directory
+      run: cd appLaravel
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -36,24 +37,26 @@ jobs:
         extensions: mbstring, bcmath, pdo, pdo_mysql
         coverage: none
 
-    # Install Composer dependencies
     - name: Install Composer dependencies
-      run: composer install --no-progress --prefer-dist
+      run: |
+        cd appLaravel
+        composer install --no-progress --prefer-dist
 
-    # Set up environment file
     - name: Set up .env file
       run: |
-        cp .env.example .env
-        php artisan key:generate
-        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
-        sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_database/' .env
-        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
-        sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
+        cp appLaravel/.env.example appLaravel/.env
+        php artisan key:generate --ansi
+        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' appLaravel/.env
+        sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_database/' appLaravel/.env
+        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' appLaravel/.env
+        sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' appLaravel/.env
 
-    # Run database migrations
     - name: Run migrations
-      run: php artisan migrate --force
+      run: |
+        cd appLaravel
+        php artisan migrate --force
 
-    # Run PHPUnit tests
     - name: Run tests
-      run: vendor/bin/phpunit --testdox
+      run: |
+        cd appLaravel
+        vendor/bin/phpunit --testdox
