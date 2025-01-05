@@ -27,9 +27,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Navigate to project directory
-      run: cd appLaravel
-
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -38,25 +35,19 @@ jobs:
         coverage: none
 
     - name: Install Composer dependencies
-      run: |
-        cd appLaravel
-        composer install --no-progress --prefer-dist
+      run: composer install --no-progress --prefer-dist
 
     - name: Set up .env file
       run: |
-        cp appLaravel/.env.example appLaravel/.env
+        cp .env.example .env
         php artisan key:generate --ansi
-        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' appLaravel/.env
-        sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_database/' appLaravel/.env
-        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' appLaravel/.env
-        sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' appLaravel/.env
+        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
+        sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_database/' .env
+        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+        sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
 
     - name: Run migrations
-      run: |
-        cd appLaravel
-        php artisan migrate --force
+      run: php artisan migrate --force
 
     - name: Run tests
-      run: |
-        cd appLaravel
-        vendor/bin/phpunit --testdox
+      run: vendor/bin/phpunit --testdox
