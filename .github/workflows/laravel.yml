@@ -1,26 +1,59 @@
-name: Laravel Unit Tests
+name: Laravel CI
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  laravel-tests:
+    runs-on: ubuntu-24.04
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_database
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
-      # Étape 1 : Récupérer le code
-      - name: Checkout code
-        uses: actions/checkout@v3
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Étape 2 : Configurer PHP
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1' # Remplacez par la version de PHP utilisée par votre projet
-          extensions: mbstring, bcmath
-          coverage: none
+    # Set up PHP
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.2
+        extensions: mbstring, bcmath, pdo, pdo_mysql
+        coverage: none
+
+    # Install Composer dependencies
+    - name: Install Composer dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist
+
+    # Set up environment file
+    - name: Set up .env file
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
+        sed -i 's/DB_DATABASE=laravel/DB_DATABASE=test_database/' .env
+        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+        sed -i 's/DB_PASSWORD=/DB_PASSWORD=root/' .env
+
+    # Run database migrations
+    - name: Run migrations
+      run: php artisan migrate --force
+
+    # Run PHPUnit tests
+    - name: Run tests
+      run: vendor/bin/phpunit --testdox
