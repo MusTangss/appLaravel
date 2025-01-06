@@ -8,7 +8,7 @@ An unknown error occured, try to find it by your self
 No internet connection, restart your computer and 
 try again tomorrow
 Cannot copy the file 'moodle.json', the file with 
-this name is not supported in windows bermida
+this name is not supported in windows bermidadfdf
 The programm
 11111
 222222
