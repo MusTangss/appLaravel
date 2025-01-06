@@ -45,9 +45,9 @@ jobs:
         npm install
 
     - name: Run Migrations
-      working-directory: ./example-app
+      working-directory: ./App
       run: php artisan migrate --force
 
     - name: Run Tests
-      working-directory: ./example-app
+      working-directory: ./App
       run: vendor/bin/phpunit --testdox
