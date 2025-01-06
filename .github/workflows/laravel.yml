@@ -27,18 +27,27 @@ jobs:
     - name: Install Laravel Project with Composer
       run: composer create-project --prefer-dist laravel/laravel App
 
-    #- name: Navigate to Laravel Project
-     # run: cd App
-
     - name: Navigate to Laravel Project
       working-directory: ./App
       run: |
         composer install --no-progress --prefer-dist
         cp .env.example .env
         php artisan key:generate --ansi
-
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.0
+        
     - name: Install NPM dependencies
       working-directory: ./App
       run: |
         npm install
-        npm run dev
+
+    - name: Run Migrations
+      working-directory: ./example-app
+      run: php artisan migrate --force
+
+    - name: Run Tests
+      working-directory: ./example-app
+      run: vendor/bin/phpunit --testdox
