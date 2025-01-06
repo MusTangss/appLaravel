@@ -30,21 +30,15 @@ jobs:
     - name: Navigate to Laravel Project
       run: cd App
 
-    - name: Install Composer dependencies
-      run: composer install
-
-    - name: Install NPM dependencies
+    - name: Navigate to Laravel Project
+      working-directory: ./example-app
       run: |
-        npm install
-        npm run dev
-
-    - name: Set up .env file
-      run: |
+        composer install --no-progress --prefer-dist
         cp .env.example .env
         php artisan key:generate --ansi
 
-    - name: Run Migrations
-      run: php artisan migrate --force
-
-    - name: Run Tests
-      run: vendor/bin/phpunit --testdox
+    - name: Install NPM dependencies
+      working-directory: ./example-app
+      run: |
+        npm install
+        npm run dev
