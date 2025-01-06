@@ -25,13 +25,13 @@ jobs:
         sudo mv composer.phar /usr/local/bin/composer
 
     - name: Install Laravel Project with Composer
-      run: composer create-project --prefer-dist laravel/laravel example-app
+      run: composer create-project --prefer-dist laravel/laravel App
 
     - name: Navigate to Laravel Project
-      run: cd example-app
+      run: cd App
 
-    #- name: Install Composer dependencies
-     # run: composer install --no-progress --prefer-dist
+    - name: Install Composer dependencies
+      run: composer install
 
     - name: Install NPM dependencies
       run: |
