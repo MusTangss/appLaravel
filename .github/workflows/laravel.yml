@@ -27,18 +27,18 @@ jobs:
     - name: Install Laravel Project with Composer
       run: composer create-project --prefer-dist laravel/laravel App
 
-    - name: Navigate to Laravel Project
-      run: cd App
+    #- name: Navigate to Laravel Project
+     # run: cd App
 
     - name: Navigate to Laravel Project
-      working-directory: ./example-app
+      working-directory: ./App
       run: |
         composer install --no-progress --prefer-dist
         cp .env.example .env
         php artisan key:generate --ansi
 
     - name: Install NPM dependencies
-      working-directory: ./example-app
+      working-directory: ./App
       run: |
         npm install
         npm run dev
